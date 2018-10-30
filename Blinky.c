@@ -1,3 +1,6 @@
+/*
+This code blinks LEDs on pin 1,2,3 on Port F
+*/
 #include "TM4C123GH6PM.h"
 #define pin 0x0E // 0X08 GREEN, 0X04 Blue, 0x02 Red, 0x0E White
 
