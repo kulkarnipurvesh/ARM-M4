@@ -1,3 +1,8 @@
+/*
+This code generate a square wave of 50HZ at 50% 
+duty cycle on GPIO2 and GPIO3 (phase shifted at 
+180 degrees from each other)
+*/
 #include <stdint.h>
 #include <stdbool.h>
 #include "inc/hw_gpio.h"
@@ -16,7 +21,7 @@
 
 int main()
 {
-	  SysCtlClockSet(SYSCTL_SYSDIV_32|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ);
+	SysCtlClockSet(SYSCTL_SYSDIV_32|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ);
 
     // Enable the peripherals used by this program.
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
@@ -24,7 +29,7 @@ int main()
 
     //Configure PF1 Pins as PWM
     GPIOPinConfigure(GPIO_PF2_M1PWM6);
-		GPIOPinConfigure(GPIO_PF3_M1PWM7);
+	GPIOPinConfigure(GPIO_PF3_M1PWM7);
     GPIOPinTypePWM(GPIO_PORTF_BASE, GPIO_PIN_2|GPIO_PIN_3);
 
     //Configure PWM Options
@@ -37,15 +42,15 @@ int main()
 
     //Set PWM duty-50% (Period /2)
     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6,813); 
-		PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7,813); 
+	PWMPulseWidthSet(PWM1_BASE, PWM_OUT_7,813); 
 
     // Enable the PWM generator
     PWMGenEnable(PWM1_BASE, PWM_GEN_3);
 
     // Turn on the Output pins
     PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);  // output a wave on pin (PWM1_BASE = MODULE 1, PWM_OUT_6 = PF2 (CHECK SCOPE))
-		PWMOutputInvert(PWM1_BASE, PWM_OUT_7_BIT, true); // Invert 
-		PWMOutputState(PWM1_BASE, PWM_OUT_7_BIT, true);  // Enable Interted Output
+	PWMOutputInvert(PWM1_BASE, PWM_OUT_7_BIT, true); // Invert 
+	PWMOutputState(PWM1_BASE, PWM_OUT_7_BIT, true);  // Enable Interted Output
 		
 
 		while(1) {}
