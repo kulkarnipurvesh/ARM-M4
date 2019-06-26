@@ -45,59 +45,51 @@ void InitConsole(void)
 
 int main()
 	{
-	  SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ);
-	  InitConsole();
-	  uint32_t ADCValues[1];
-		uint32_t TempValueC ;
-	  uint32_t TempValueF ;
-		
-		UARTprintf("ADC ->\n");
-	  UARTprintf("  Type: Internal Temperature Sensor\n");
-	  UARTprintf("  Samples: One\n");
-	  UARTprintf("  Update Rate: 250ms\n");
-	  UARTprintf("  Input Pin: Internal temperature sensor\n\n");
 
-	  SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
-	  SysCtlDelay(3);
-	  ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0);
-	  ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH7 | ADC_CTL_IE |ADC_CTL_END); //ain7 = pd0, replace CH7 to TS for internal temperature sensor
+		SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ);
+		InitConsole();
+		uint32_t ADCValues[1];
+		uint32_t TempValueC ;
+		uint32_t TempValueF ;
+			
+		UARTprintf("ADC ->\n");
+		UARTprintf("  Type: Internal Temperature Sensor\n");
+		UARTprintf("  Samples: One\n");
+		UARTprintf("  Update Rate: 250ms\n");
+		UARTprintf("  Input Pin: Internal temperature sensor\n\n");
+
+		SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
+		SysCtlDelay(3);
+		ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0);
+		ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH7 | ADC_CTL_IE |ADC_CTL_END); //ain7 = pd0, replace CH7 to TS for internal temperature sensor
 		
 		ADCSequenceEnable(ADC0_BASE, 3);
-	  ADCIntClear(ADC0_BASE, 3);
+		ADCIntClear(ADC0_BASE, 3);
 
 	    while(1)
 	    {
 	        // Trigger the ADC conversion.
 	        ADCProcessorTrigger(ADC0_BASE, 3);
+	        
 	        // Wait for conversion to be completed.
 	        while(!ADCIntStatus(ADC0_BASE, 3, false))
 	        {
 	        }
+
 	        // Clear the ADC interrupt flag.
 	        ADCIntClear(ADC0_BASE, 3);
 	        // Read ADC Value.
 	        ADCSequenceDataGet(ADC0_BASE, 3, ADCValues);
-	        //
-	        // Use non-calibrated conversion provided in the data sheet. I use floats in intermediate
-	        // math but you could use intergers with multiplied by powers of 10 and divide on the end
-	        // Make sure you divide last to avoid dropout.
-	        //
-	       // TempValueC = (uint32_t)(147.5 - ((75.0*3.3 *(float)ADCValues[0])) / 4096.0); // for internal
-					TempValueF = (3.3 * ADCValues[0] * 100.0)/4096.0; // for lm34
-	        //
-	        // Get Fahrenheit value.  Make sure you divide last to avoid dropout.
-	        //
-	       // TempValueF = ((TempValueC * 9) + 160) / 5; // for internal
-					TempValueC = (TempValueF - 32) * (5.0/9.0); // for lm34
-	        //
+	        
+	        // TempValueC = (uint32_t)(147.5 - ((75.0*3.3 *(float)ADCValues[0])) / 4096.0); // for internal
+			TempValueF = (3.3 * ADCValues[0] * 100.0)/4096.0; // for lm34
+	        
+	        // TempValueF = ((TempValueC * 9) + 160) / 5; // for internal
+			TempValueC = (TempValueF - 32) * (5.0/9.0); // for lm34
+
 	        // Display the temperature value on the console.
-	        //
 	        UARTprintf("Temperature = %3d*C or %3d*F\r", TempValueC,TempValueF);
-	        //
-	        // This function provides a means of generating a constant length
-	        // delay.  The function delay (in cycles) = 3 * parameter.  Delay
-	        // 250ms arbitrarily.
-	        //
+
 	        SysCtlDelay(80000000 / 12);
 	    }
 }
