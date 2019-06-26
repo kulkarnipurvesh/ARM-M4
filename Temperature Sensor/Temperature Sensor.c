@@ -82,10 +82,10 @@ int main()
 	        ADCSequenceDataGet(ADC0_BASE, 3, ADCValues);
 	        
 	        // TempValueC = (uint32_t)(147.5 - ((75.0*3.3 *(float)ADCValues[0])) / 4096.0); // for internal
-			TempValueF = (3.3 * ADCValues[0] * 100.0)/4096.0; // for lm34
+		TempValueF = (3.3 * ADCValues[0] * 100.0)/4096.0; // for lm34
 	        
 	        // TempValueF = ((TempValueC * 9) + 160) / 5; // for internal
-			TempValueC = (TempValueF - 32) * (5.0/9.0); // for lm34
+		TempValueC = (TempValueF - 32) * (5.0/9.0); // for lm34
 
 	        // Display the temperature value on the console.
 	        UARTprintf("Temperature = %3d*C or %3d*F\r", TempValueC,TempValueF);
