@@ -53,5 +53,6 @@ int main()
 	PWMOutputState(PWM1_BASE, PWM_OUT_7_BIT, true);  // Enable Interted Output
 		
 
-		while(1) {}
+	while(1) {}
+        
 	}
