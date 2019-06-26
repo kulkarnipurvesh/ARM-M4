@@ -1,15 +1,9 @@
 /*
-###########################################################
-1.For different methods,check page 19,20
-2.First activate GPIO ports by giving clock to RCGCGPIO, in accordance to page 30 (bottom)
-3.Then set direction using DIR
-4.Then make that port digitally enabled (not analog) using DEN
-5.Method 2,3,3.1 uses mask hence wont affect other pins and would only change that particular pin, page 19,20
-###########################################################
+Blinky the leds using <<
 */
 
 #include "TM4C123GH6PM.h"
-#define seescope 1000 // ms
+#define milliseconds 1000 // ms
 
 void delayMs(int n);
 
@@ -21,20 +15,20 @@ int main(void)
 	
 	while(1)
 	{
-		//GPIOF->DATA= 0X0E; //Can also be used 								//Method 1
-		//GPIOF->DATA= 1<<3														//Method 2
-		//GPIOF->DATA= 1<<3 | 1<<2; //BLUE and Green both on					//Method 3
-		//GPIOF->DATA= 1<<3 | 1<<2 | 1<<1; // All leds on							//Method 3.1
-		GPIOF->DATA |= (0X08 | 0X02 |0x04);										//Method 4
+		//GPIOF->DATA= 0X0E; //Can also be used 								
+		//GPIOF->DATA= 1<<3														
+		//GPIOF->DATA= 1<<3 | 1<<2; //BLUE and Green both on					
+		//GPIOF->DATA= 1<<3 | 1<<2 | 1<<1; // All leds on							
+		GPIOF->DATA |= (0X08 | 0X02 |0x04);										
 		
-		delayMs(seescope);
+		delayMs(milliseconds);
 		
-		//GPIOF->DATA= 0;														//Method 1
-		//GPIOF->DATA= 0<<3														//Method 2
-		//GPIOF->DATA= 0<<3 | 0<<2;												//Method 3
-		//GPIOF->DATA= 0<<3 | 0<<2 | 0<<1;											//Method 3.1
-		GPIOF->DATA &= ~(0X08 |0X02 |0x04);									    //Method 4
-		delayMs(seescope);
+		//GPIOF->DATA= 0;														
+		//GPIOF->DATA= 0<<3														
+		//GPIOF->DATA= 0<<3 | 0<<2;												
+		//GPIOF->DATA= 0<<3 | 0<<2 | 0<<1;											
+		GPIOF->DATA &= ~(0X08 |0X02 |0x04);									    
+		delayMs(milliseconds);
 	}
 }
 
